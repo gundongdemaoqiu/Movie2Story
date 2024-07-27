@@ -129,6 +129,43 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 
     # ==========================================================================================================
     processor = {'image': None, 'video': None}
+#     视频处理塔（Video Tower）是一个专门设计用来处理和分析视频数据的模块。在多模态模型（如LLAVA）中，视频处理塔可以提取视频帧的特征并将其转换为模型可以理解的表示，以便进一步处理。
+
+# 在给定的代码片段中，`processor` 是一个字典，用于存储图像和视频处理器。这个字典的结构和最终内容取决于模型配置中的多模态设置。
+
+# 以下是 `processor` 字典的最终样子和其具体元素的类型：
+
+# ```python
+# processor = {
+#     'image': image_processor,  # 类型：图像处理器对象或 None
+#     'video': video_processor   # 类型：视频处理器对象或 None
+# }
+# ```
+
+# ### 元素类型介绍：
+
+# 1. **图像处理器 (`image_processor`)**
+#    - **类型**: 由模型的图像塔（Image Tower）提供的处理器对象。
+#    - **用途**: 用于预处理输入图像数据，使其符合模型的输入要求。处理过程可能包括图像缩放、归一化等操作。
+#    - **具体实现**: 依赖于模型配置和具体实现，通常是某种深度学习框架（如PyTorch或TensorFlow）中的处理类。
+
+# 2. **视频处理器 (`video_processor`)**
+#    - **类型**: 由模型的视频塔（Video Tower）提供的处理器对象。
+#    - **用途**: 用于预处理输入视频数据，使其符合模型的输入要求。处理过程可能包括视频帧提取、帧间归一化等操作。
+#    - **具体实现**: 依赖于模型配置和具体实现，通常是某种深度学习框架（如PyTorch或TensorFlow）中的处理类。
+
+
+# 在多模态处理任务中，视频处理塔模型（video tower models）用于从视频数据中提取特征和信息，并将其输入到下游任务中。这些模型通常会结合计算机视觉和时间序列分析技术。以下是一些常用的视频处理塔模型的例子：
+
+# ### 1. **I3D (Inflated 3D ConvNet)**
+# I3D模型通过将2D卷积网络（如Inception-V1）扩展为3D卷积网络，使其能够处理视频中的时间维度。I3D在动作识别任务中表现出色。
+
+
+# class LanguageBindImageProcessor(ProcessorMixin):就是一个队视频进行裁剪等造作的视频处理塔类
+#    - `__call__` 方法是该类的主要方法，允许同时处理图像和文本输入。
+#     - 如果提供了文本，它会使用 `tokenizer` 对文本进行编码。
+#     - 如果提供了图像，它会使用图像处理函数对图像进行处理并转换为张量。
+#     - 最后返回编码后的文本和/或图像特征。
 
     if 'llava' in model_name.lower():
         mm_use_im_start_end = getattr(model.config, "mm_use_im_start_end", False)

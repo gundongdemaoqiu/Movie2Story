@@ -24,7 +24,23 @@ from transformers import AutoConfig, AutoModelForCausalLM, \
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
 from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
+# ### LlamaModel
 
+# 功能：
+# - 基础模型 (Base Model): LlamaModel 是一个基础的 Transformer 模型，它包含了所有的编码层和解码层，但没有附加任何特定任务的头部（head）。它主要用于生成通用的嵌入表示。
+# - 特征提取 (Feature Extraction): 由于它不包含特定任务的头部，LlamaModel 可以用于特征提取，从而支持多种下游任务，例如文本分类、情感分析、命名实体识别等。
+
+# ### LlamaForCausalLM
+
+# 功能：
+# - 因果语言模型 (Causal Language Model): LlamaForCausalLM 是在 LlamaModel 基础上增加了一个语言模型头部的版本。这个头部通常是一个线性层，负责生成下一个词的概率分布。
+# - 文本生成 (Text Generation): 由于它包含了因果语言模型头部，LlamaForCausalLM 主要用于文本生成任务，例如自动写作、对话系统、代码生成等。
+# - 因果结构: 模型使用因果结构（即只考虑前面的词）的注意机制，这使它适用于自回归生成任务。
+
+# ### 关系
+
+# - 基础与扩展: LlamaForCausalLM 是在 LlamaModel 之上的一个扩展。LlamaModel 提供了基本的 Transformer 编码能力，而 LlamaForCausalLM 通过添加一个语言模型头部，使其适用于因果语言建模任务。
+# - 共享架构: 两者共享相同的底层架构和预训练参数，但 LlamaForCausalLM 通过额外的头部使其能够进行特定任务的优化。
 
 class LlavaConfig(LlamaConfig):
     model_type = "llava"

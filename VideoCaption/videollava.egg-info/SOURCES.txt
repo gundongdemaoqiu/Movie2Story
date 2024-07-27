@@ -1,5 +1,3 @@
-LICENSE
-README.md
 pyproject.toml
 videollava/__init__.py
 videollava/constants.py
