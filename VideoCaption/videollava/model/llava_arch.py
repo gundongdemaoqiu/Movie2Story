@@ -148,6 +148,7 @@ class LlavaMetaForCausalLM(ABC):
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels, images
     ):
+        # 多模态数据的处理来liyongLLAMA文本模型
         # ====================================================================================================
         image_tower = self.get_image_tower()
         video_tower = self.get_video_tower()
