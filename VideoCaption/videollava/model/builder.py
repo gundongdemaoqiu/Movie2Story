@@ -161,7 +161,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 # I3D模型通过将2D卷积网络（如Inception-V1）扩展为3D卷积网络，使其能够处理视频中的时间维度。I3D在动作识别任务中表现出色。
 
 
-# class LanguageBindImageProcessor(ProcessorMixin):就是一个队视频进行裁剪等造作的视频处理塔类
+# class  ImageProcessor(ProcessorMixin):就是一个队视频进行裁剪等造作的视频处理塔类
 #    - `__call__` 方法是该类的主要方法，允许同时处理图像和文本输入。
 #     - 如果提供了文本，它会使用 `tokenizer` 对文本进行编码。
 #     - 如果提供了图像，它会使用图像处理函数对图像进行处理并转换为张量。
