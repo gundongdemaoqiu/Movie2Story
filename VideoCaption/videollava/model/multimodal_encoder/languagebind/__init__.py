@@ -174,6 +174,10 @@ class LanguageBindImageTower(nn.Module):
 
 
 class LanguageBindVideoTower(nn.Module):
+#     模型加载和管理：LanguageBindVideoTower 类负责加载和管理 LanguageBindVideo 模型，并在前向传播中提取视频特征。
+# 特征选择：可以根据配置选择不同层的特征。
+# 前向传播：支持对单个视频或视频列表进行处理，提取和返回视频特征。
+# 设备和数据类型：通过 dtype 和 device 属性管理模型的设备和数据类型。
     def __init__(self, video_tower, args, delay_load=False, cache_dir='./cache_dir'):
         super().__init__()
 
