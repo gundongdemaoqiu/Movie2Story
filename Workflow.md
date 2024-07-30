@@ -5,8 +5,10 @@
 ## 利用模型：
     1. LLAVA等基础模型和causal预训练模型。eg:LlavaLlamaForCausalLM类。 但是这里只能应对文本模型，其中定义了新的forward等其他函数，为了针对多模态数据。
     2. 对于video 的processor， 利用了 video-tower和image-tower等一些模型处理，但是注意，这里并不是实现了image-》text的特征空间映射，而是通过了一些tramsform的方法进行裁剪等操作，提取视频图像的基本feature。eg：LanguageBindVideoProcessor(ProcessorMixin)类中的load_and_transform_video，对三种不同的方法处理视频数据，提取pixel_values。
-    3. 真正结合image到文本模型的是 LlavaMetaForCausalLM中的 prepare_inputs_labels_for_multimodal 函数。这里定义了怎么把image的tensor 结合到text空间  （具体函数思路待日后补充！！！）
+    3. 真正结合image到文本模型的是 LlavaMetaForCausalLM中的 prepare_inputs_labels_for_multimodal 函数。这里定义了怎么把image的tensor 结合到text空间  ：
+        a. 这个函数的整体流程就是先利用image tower进行简单的图像变换和裁剪，提取基本feature，然后利用mm-projector自定义linear/MLP 模型进行特征空间的映射，可以通过load_state_dict实现预训练模型的加载。  （详情见 LlavaMetaModel类的 build_vision_projector(config, delay_load=False, **kwargs) ）
     4. 利用generate函数（应该是预定义的文本生成函数）结合列所有的多模态输入最终经 prepare_inputs_labels_for_multimodal 预处理后进行文本生成。
+    
 
 
 ## 其他信息补充

@@ -34,6 +34,7 @@ class LlavaMetaModel:
         if getattr(config, "mm_video_tower", None) is not None:
             self.video_tower = build_video_tower(config, delay_load=True)
         if getattr(config, "mm_image_tower", None) is not None or getattr(config, "mm_video_tower", None) is not None:
+            #这个project就是实现了将image等feature映射到text空间
             self.mm_projector = build_vision_projector(config)
 
     def get_image_tower(self):
@@ -49,6 +50,19 @@ class LlavaMetaModel:
         return video_tower
 
     def initialize_vision_modules(self, model_args, fsdp=None):
+        
+        
+#         图像塔 (image_tower) 和视频塔 (video_tower)：
+
+# image_tower 和 video_tower 是用于处理图像和视频的模块，主要负责将输入的图像或视频进行特征提取。这些模块通常包括图像变换、裁剪等操作，但它们本身不涉及到视频-文本特征空间的转换。它们的目的是从原始图像或视频中提取特征向量。
+# 特征空间转换层 (mm_projector)：
+
+# mm_projector 是一个特征空间转换层，负责将从 image_tower 和 video_tower 中提取的特征映射到一个统一的特征空间。具体地说，它将图像和视频的特征投影到与文本特征空间对齐的维度。
+# mm_projector 可以是线性层、MLP 层等，取决于 config 中的设置。
+# 加载预训练模型参数：
+
+# mm_projector 的参数可以通过 load_state_dict 函数加载预训练的模型参数。这通常是为了使模型利用先前训练的知识，从而加速训练过程或提高模型性能。
+# pretrain_mm_mlp_adapter 参数指定了预训练模型的路径。torch.load 函数用于加载这些参数，并通过 get_w 函数筛选出与 mm_projector 相关的权重。
         # ==============================================
         image_tower = model_args.image_tower
         video_tower = model_args.video_tower
