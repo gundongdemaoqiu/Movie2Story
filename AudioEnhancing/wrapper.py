@@ -17,7 +17,7 @@ class PengiWrapper():
     """
     A class for interfacing Pengi model.
     """
-    def __init__(self, config, use_cuda=False):
+    def __init__(self, config, use_cuda=True):
         self.file_path = os.path.realpath(__file__)
         if config == "base":
             config_path = 'base.yml'
@@ -28,7 +28,9 @@ class PengiWrapper():
         else:
             raise ValueError(f"Config type {config} not supported")
 
-        self.model_path = files('configs').joinpath(model_path)
+        # self.model_path = files('configs').joinpath(model_path)
+        #权重下载到了另一个地方
+        self.model_path = os.path.join("/vepfs/fs_users/lkn/pengi", model_path)
         self.config_path = files('configs').joinpath(config_path)
         self.use_cuda = use_cuda
         self.model, self.enc_tokenizer, self.dec_tokenizer, self.args = self.get_model_and_tokenizer(config_path=self.config_path)

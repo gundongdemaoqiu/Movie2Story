@@ -16,8 +16,9 @@ def videocaption(video):
     disable_torch_init()
     # video = 'video/1.mp4'
     inp = 'Gnerate the caption for this video.'
+    # 模型权重加载为vepfs地址
     model_path = 'LanguageBind/Video-LLaVA-7B'
-    cache_dir = 'cache_dir'
+    cache_dir = '/vepfs/fs_users/lkn/video_llava'
     device = 'cuda:0'
     load_4bit, load_8bit = True, False
     model_name = get_model_name_from_path(model_path)
@@ -103,5 +104,5 @@ def videocaption(video):
     return outputs
 
 if __name__ == '__main__':
-    videocaption = videocaption('video/1.mp4')
+    videocaption = videocaption('/root/code/MMAD/Example/Video/demo.mp4')
     print(videocaption)

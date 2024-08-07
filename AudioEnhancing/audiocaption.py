@@ -67,4 +67,4 @@ def audioenhancing(video_path, audio_prompt_path):
 
 
 if __name__ == "__main__":
-    audioenhancing(video_path="/home/gpu15/projx/YeXiaojun/MMAD/Example/Video/demo.mp4",audio_prompt_path="/home/gpu15/projx/YeXiaojun/MMAD/Example/prompt/audio.txt")
+    audioenhancing(video_path="/root/code/MMAD/Example/Video/demo.mp4",audio_prompt_path="/root/code/MMAD/Example/prompt/audio.txt")

@@ -1,2 +1,0 @@
-emotion: happy 
-events: music

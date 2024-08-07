@@ -1,0 +1,3 @@
+[2024-08-05 07:57:41,660] [train_net.py] [INFO] : Called with args:
+Namespace(gpu=-1, epoch=5, weights='/root/code/MMAD/person_search/data/pretrained_model/resnet50_caffe.pth', checkpoint=None, cfg=None, data_dir=None, dataset='psdb_train', rand=False, solver='sgd', tbX=False)
+[2024-08-05 07:57:41,660] [train_net.py] [INFO] : Set to none random mode.
