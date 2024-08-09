@@ -108,7 +108,7 @@ def load_and_transform_video(
         duration = len(decord_vr)
         frame_id_list = np.linspace(0, duration-1, num_frames, dtype=int)
         video_data = decord_vr.get_batch(frame_id_list)
-        video_data = video_data.permute(3, 0, 1, 2)  # (T, H, W, C) -> (C, T, H, W)
+        video_data = video_data.permute(3, 0, 1, 2)  # (T, H, W, C) -> (C, T, H, W)     
         video_outputs = transform(video_data)
 
     elif video_decode_backend == 'opencv':
@@ -157,6 +157,41 @@ def get_video_transform(config):
         raise NameError('video_decode_backend should specify in (pytorchvideo, decord, opencv)')
     return transform
 
+import matplotlib.pyplot as plt
+
+def visualize_video_tensor(video_tensor):
+    """
+    可视化处理后的视频帧
+
+    Args:
+        video_tensor (torch.Tensor): 处理后的视频张量，形状为 (C, T, H, W)
+    """
+    # video_tensor 的形状为 (C, T, H, W)
+    # 我们将其转换为 (T, C, H, W) 以遍历帧
+    video_tensor = video_tensor.permute(1, 0, 2, 3)  # 转换为 (T, C, H, W)
+
+    num_frames = video_tensor.size(0)
+
+    # 可视化每一帧
+    for i in range(num_frames):
+        img_tensor = video_tensor[i]
+
+        # 将图像从张量转换为 NumPy 数组
+        img = img_tensor.permute(1, 2, 0).cpu().numpy()
+
+        # 逆归一化（假设标准 Normalize(mean, std) 处理）
+        mean = torch.tensor([0.485, 0.456, 0.406])
+        std = torch.tensor([0.229, 0.224, 0.225])
+        img = img * std.numpy() + mean.numpy()
+
+        # 裁剪到 [0, 1] 的范围
+        img = img.clip(0, 1)
+
+        # 可视化
+        plt.imshow(img)
+        plt.title(f'Frame {i+1}')
+        plt.axis('off')
+        plt.savefig(f"test {i}.png")
 
 if __name__ == "__main__":
     config = CLIPVisionConfig()
@@ -171,5 +206,6 @@ if __name__ == "__main__":
     )
     
     print("Processed video tensor shape:", video_tensor.shape)
-    # video_tensor 将包含处理后的张量，形状可能为 (3, num_frames, 224, 224)
+    # video_tensor 将包含处理后的张量，形状可能为 (3, num_frames, 224, 224)   channel, frames, height, width
+    # visualize_video_tensor(video_tensor)
 

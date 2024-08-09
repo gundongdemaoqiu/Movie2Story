@@ -2,6 +2,13 @@
 
 ## 整体workflow处理
     利用一些预定义的transform方法对image，video进行基本特征提取，比如pixel values提取（可见LanguageBindVideoProcessor类），然后通过自己定义的 prepare_inputs_labels_for_multimodal 来将视频tensor 结合text tensot输入到llava文本模型生成文本。
+    
+## 视频处理流程：
+1.经过video_process的load_adn_transform简单处理视频得到(C,T,H,W)向量，不涉及神经网络。
+2.在prepare_multilodal_data阶段，加载CLIPvisionTransformer进行forward处理video_feature,然后对于output进行特定层的选择。
+3.经过mm_projector进行输入输出维度的一致性映射，方便和text合并起来。
+4.将处理过的image_feature插入到text向量中，最终整体输入给llm的forward得到最终的raw_text 
+
 ## 利用模型：
     1. LLAVA等基础模型和causal预训练模型。eg:LlavaLlamaForCausalLM类。 但是这里只能应对文本模型，其中定义了新的forward等其他函数，为了针对多模态数据。
     2. 对于video 的processor， 利用了 video-tower和image-tower等一些模型处理，但是注意，这里并不是实现了image-》text的特征空间映射，eg：LanguageBindVideoProcessor(ProcessorMixin)类中的load_and_transform_video，对三种不同的方法处理视频数据，提取pixel_values。
