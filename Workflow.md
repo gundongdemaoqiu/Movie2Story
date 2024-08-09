@@ -14,6 +14,10 @@
 
 ## LanguageBindVideoTower模型：
     模型加载和管理：LanguageBindVideoTower 类负责加载和管理 LanguageBindVideo 模型，并在前向传播中提取视频特征。LanguageBindVideoProcessor负责load并且transform视频
+
+    流程： processor进行load and transform截取视频格式到图片，然后利用video tower/ vision moedl进行 transformer 特征转换
+        这个 get_video_transform 函数返回的是对视频帧进行预处理的操作，这些操作通常用于在将视频帧输入到神经网络之前对其进行标准化和转换。这些操作并不是神经网络的特征提取，而是为了将视频帧转换为模型可以接受的标准格式。
+
     特征选择：可以根据配置选择不同层的特征。
     前向传播：支持对单个视频或视频列表进行处理，提取和返回视频特征。
     设备和数据类型：通过 dtype 和 device 属性管理模型的设备和数据类型。
