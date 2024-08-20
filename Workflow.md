@@ -7,7 +7,7 @@
 1.经过video_process的load_adn_transform简单处理视频得到(C,T,H,W)向量，不涉及神经网络。
 2.在prepare_multilodal_data阶段，加载CLIPvisionTransformer进行forward处理video_feature,然后对于output进行特定层的选择。
 3.经过mm_projector进行输入输出维度的一致性映射，方便和text合并起来。
-4.将处理过的image_feature插入到text向量中，最终整体输入给llm的forward得到最终的raw_text 
+4.将处理过的image_feature插入到text向量中，最终整体输入给llm的forward得到最终的raw_text
 
 ## 利用模型：
     1. LLAVA等基础模型和causal预训练模型。eg:LlavaLlamaForCausalLM类。 但是这里只能应对文本模型，其中定义了新的forward等其他函数，为了针对多模态数据。
@@ -16,9 +16,21 @@
         a. 这个函数的整体流程就是先利用image tower进行简单的图像变换和裁剪，提取基本feature，然后利用mm-projector自定义linear/MLP 模型进行特征空间的映射，可以通过load_state_dict实现预训练模型的加载。  （详情见 LlavaMetaModel类的 build_vision_projector(config, delay_load=False, **kwargs) ）
     4. 利用generate函数（应该是预定义的文本生成函数）结合列所有的多模态输入最终经 prepare_inputs_labels_for_multimodal 预处理后进行文本生成。
 
-    5. /root/code/MMAD/VideoCaption/videollava/model/multimodal_encoder/languagebind 里面有所有的encoder和tower模型设置
-    
-
+    5. /root/code/MMAD/VideoCaption/videollava/model/multimodal_encoder/languagebind 里面有所有的encoder和tower模型设置 
+### text transformer和 visiontransformer的流程作用
+1. VisionTransformer 提取视频特征：
+是的，VisionTransformer 的作用是从视频帧中提取视觉特征。这些特征代表视频中的视觉内容，编码为高维特征向量，表示不同帧的内容和图像中的物体、动作、场景等信息。
+2. 结合 Prompt 生成文本空间特征：
+确切地说，TextTransformer 将 Prompt（即用户输入的文本，如问题、描述、指令）转换为文本特征。这个文本特征表示了 Prompt 的语义内容，与 VisionTransformer 提取的视觉特征一起使用。
+两者可以通过交叉注意力机制（Cross Attention）或其他方式进行融合，最终生成一个包含视觉和文本信息的多模态表征。
+3. TextTransformer 最终输出模型的预测结果：
+是的，模型的最终输出结果由 TextTransformer 提供。在问答任务中，TextTransformer 会生成答案；在描述任务中，它会生成描述。这是因为 TextTransformer 不仅理解文本，还结合视觉信息生成适当的文本输出。
+4. 是否可以直接利用其他语言模型替代：
+理论上：是的，其他预训练语言模型（如 GPT、BERT）也可以用来生成文本描述或回答问题，因为它们已经具备了强大的文本生成能力。
+但是：这类模型通常仅处理文本数据，而无法直接处理多模态数据（视频+文本）。TextTransformer 经过专门的训练，能够将 Prompt 和视觉特征进行匹配，使得模型不仅可以理解 Prompt 中的内容，还能够生成与视频内容相关的答案或描述。这是因为 TextTransformer 已经学会如何将视觉特征映射到文本特征空间中。
+5. 与一般语言模型的区别：
+一般的语言模型可能无法很好地理解 Prompt 与视频内容的映射关系，因为它们只在文本空间中进行训练，缺乏对视觉内容的理解。即使你将视觉特征作为文本输入提供给一个标准的语言模型，它也可能无法生成正确的结果，因为它没有经过视觉与文本融合的训练。
+而 TextTransformer 的特殊训练方式使得它能够通过学习视觉与文本的对齐关系，生成与视频相关的合理描述或回答。这是为什么一般的语言模型不容易替代 TextTransformer 的原因。
 ## LanguageBindVideoTower模型：
     模型加载和管理：LanguageBindVideoTower 类负责加载和管理 LanguageBindVideo 模型，并在前向传播中提取视频特征。LanguageBindVideoProcessor负责load并且transform视频
 
